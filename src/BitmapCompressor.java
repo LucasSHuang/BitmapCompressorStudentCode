@@ -32,9 +32,26 @@ public class BitmapCompressor {
      * and writes the results to standard output.
      */
     public static void compress() {
-
-        // TODO: complete compress()
-
+        boolean bit;
+        boolean currentBit = false;
+        int length = 0;
+        while (!BinaryStdIn.isEmpty()) {
+            bit = BinaryStdIn.readBoolean();
+            if (bit == currentBit) {
+                length++;
+                if (length == 255) {
+                    BinaryStdOut.write(length, 8);
+                    length = 0;
+                    BinaryStdOut.write(length, 8);
+                }
+            }
+            else {
+                BinaryStdOut.write(length, 8);
+                currentBit = !currentBit;
+                length = 1;
+            }
+        }
+        BinaryStdOut.write(length, 8);
         BinaryStdOut.close();
     }
 
@@ -43,9 +60,14 @@ public class BitmapCompressor {
      * and writes the results to standard output.
      */
     public static void expand() {
-
-        // TODO: complete expand()
-
+        boolean bit = false;
+        while (!BinaryStdIn.isEmpty()) {
+            int length = BinaryStdIn.readInt(8);
+            for (int i = 0; i < length; i++) {
+                BinaryStdOut.write(bit);
+            }
+            bit = !bit;
+        }
         BinaryStdOut.close();
     }
 
